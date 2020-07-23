@@ -1,0 +1,39 @@
+# Some hardening of a Pi during initial setup
+# 
+# ansible-playbook secure_pi.yml
+
+- hosts: all
+  gather_facts: no
+  vars:
+    - ansible_ssh_user: "{{ username }}"
+
+  tasks:
+    - name: "Test SSH connection"
+      ping: 
+      ignore_unreachable: yes
+      ignore_errors: yes
+      changed_when: false
+      register: ssh_test
+
+- hosts: all
+  become: true
+  roles:
+    - role: rpi_change_user
+      any_errors_fatal: true
+      when: ssh_test.unreachable is defined
+
+    - role: dev-sec.ssh-hardening
+      vars:
+        ssh_allow_users: "{{ username }}"
+
+    - role: dev-sec.os-hardening
+      vars:
+        os_auditd_enabled: false
+        os_selinux_state: permissive
+        sysctl_overwrite:
+          vm.mmap_rnd_bits: 15
+
+  tasks:
+    - name: Congratulations!
+      debug:
+        msg: "Your Raspi is ready now!"

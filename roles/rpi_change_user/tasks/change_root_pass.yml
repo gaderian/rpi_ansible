@@ -1,0 +1,11 @@
+---
+- name: Create new password
+  include_tasks: create_password.yml
+  vars:
+    - username: root
+
+- name: Set root password
+  user:
+    name: root
+    update_password: always
+    password: "{{ password_hash.stdout_lines[-1] }}"

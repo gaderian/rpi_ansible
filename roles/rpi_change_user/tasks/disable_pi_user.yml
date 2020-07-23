@@ -1,0 +1,6 @@
+---
+- name: Disable pi user
+  user:
+    name: pi
+    password_lock: yes
+    groups: ''

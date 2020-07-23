@@ -1,0 +1,8 @@
+---
+- include_tasks: create_new_user.yml
+
+- name: Change root password
+  include_tasks: change_root_pass.yml
+
+- include_tasks: disable_pi_user.yml
+  when: rpi_disable_pi

@@ -1,0 +1,4 @@
+---
+# defaults file for rpi_change_user
+rpi_disable_pi: yes
+rpi_password_path: /tmp/
